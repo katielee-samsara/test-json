@@ -547,54 +547,6 @@
         }
       }
     },
-    "/fleet/drivers": {
-      "get": {
-        "tags": [
-          "Drivers"
-        ],
-        "summary": "List all drivers",
-        "description": "Returns a list of all drivers",
-        "operationId": "getDrivers",
-        "parameters": [
-          {
-            "$ref": "#/parameters/limitParam"
-          },
-          {
-            "$ref": "#/parameters/beforeParam"
-          },
-          {
-            "$ref": "#/parameters/afterParam"
-          },
-          {
-            "$ref": "#/parameters/tagIdsParam"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of all driver objects.",
-            "schema": {
-              "properties": {
-                "data": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/Driver"
-                  }
-                },
-                "pagination": {
-                  "$ref": "#/definitions/PaginationResponse",
-                  "default": {
-                    "description": "Error response",
-                    "schema": {
-                      "$ref": "#/definitions/ErrorResponse"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/tags": {
       "get": {
         "tags": [
