@@ -2114,7 +2114,7 @@
     },
     "/v1/fleet/trips": {
       "get": {
-        "description": "Get historical trips data for specified vehicle. This method returns a set of historical trips data for the specified vehicle in the specified time range.",
+        "description": "Trips are segments of driving activity are calculated based on vehicle movement. For more information on how trips are calculated, see this [KB Article](https://kb.samsara.com/hc/en-us/articles/227164048-How-Trips-are-Segmented). /n/n This method gets the historical trips for a specified vehicle, for the specified time range. Given these are Samsara-computed segments, these values cannot be modified by a user.\n\nNote that trips are distinct from [unassigned drive time segments](https://kb.samsara.com/hc/en-us/articles/360007629752-Assigning-and-Annotating-Unassigned-HOS-Hours-of-Service-) for Hours of Service.",
         "tags": [
           "Fleet"
         ],
