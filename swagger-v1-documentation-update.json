@@ -2114,7 +2114,7 @@
     },
     "/v1/fleet/trips": {
       "get": {
-        "description": "Trips are segments of driving activity are calculated based on vehicle movement. For more information on how trips are calculated, see this [KB Article](https://kb.samsara.com/hc/en-us/articles/227164048-How-Trips-are-Segmented).\n\nThis method gets the historical trips for a specified vehicle, for the specified time range. Given these are Samsara-computed segments, these values cannot be modified by a user.\n\nNote that trips are distinct from [unassigned drive time segments](https://kb.samsara.com/hc/en-us/articles/360007629752-Assigning-and-Annotating-Unassigned-HOS-Hours-of-Service-) for Hours of Service.",
+        "description": "Trips are segments of driving activity are calculated based on vehicle movement. Trip information can be aggregated across times in order to calculate total drive time for a given driver for IFTA or payroll reporting. For more information on how trips are calculated, see this [KB Article](https://kb.samsara.com/hc/en-us/articles/227164048-How-Trips-are-Segmented).\n\nThis method gets the historical trips for a specified vehicle, for the specified time range. Given these are Samsara-computed segments, these values cannot be modified by a user.\n\nNote that trips are distinct from [unassigned drive time segments](https://kb.samsara.com/hc/en-us/articles/360007629752-Assigning-and-Annotating-Unassigned-HOS-Hours-of-Service-) for Hours of Service.",
         "tags": [
           "Fleet"
         ],
@@ -7196,7 +7196,7 @@
       }
     },
     "TripResponse": {
-      "description": "Contains the trips for the vehicle in the requested timeframe. A trip is represented as an object that contains startMs, startLocation, startAddress, startCoordinates, endMs, endLocation, endAddress and endCoordinates.",
+      "description": "Contains the trips for the vehicle in the requested timeframe.",
       "type": "object",
       "properties": {
         "trips": {
@@ -7205,7 +7205,7 @@
             "type": "object",
             "properties": {
               "codriverIds": {
-                "description": "List of codriver IDs",
+                "description": "List of codriver IDs.",
                 "type": "array",
                 "items": {
                   "type": "integer",
@@ -7221,7 +7221,7 @@
                 "example": 2500
               },
               "driverId": {
-                "description": "ID of the driver.",
+                "description": "ID of the driver who was assigned to the given vehicle at the time of the trip movement.",
                 "type": "integer",
                 "example": 719
               },
