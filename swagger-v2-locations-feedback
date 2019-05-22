@@ -19,7 +19,7 @@
   "paths": {
     "/fleet/vehicles/diagnostics": {
       "get": {
-        "description": "This endpoint allows you to both fetch historical diagnostics information for a set of vehicles, as well as a feed of all new vehicle diagnostics information.\n\nIf you wish to just fetch the historical data for a vehicle, you can pass in a `startTime` and `endTime` range. This will return all data points for each vehicle during the given time range. If the datapoint was read before `startTime`, this will also show up in the response. \n\nIf an `endTime` is not provided, then this will provide a continuous feed of all data points. In order to follow the feed, you can follow the pagination `hasNextPage` cursor continuously. ",
+        "description": "This endpoint allows you to both fetch historical diagnostics information for a set of vehicles, as well as a feed of all new vehicle diagnostics information.\n\nIf you wish to just fetch the historical data for a vehicle, you can pass in a `startTime` and `endTime` range. This will return all data point readings for each vehicle between the given time range. \n\nIf an `endTime` is not provided, then this will provide a continuous feed of all data points. In order to follow the feed, you can follow the pagination `hasNextPage` cursor continuously. If there is not yet a `hasNextPage=true` for the feed follow, then we recommend you wait and retry in 5 seconds.",
         "tags": [
           "Vehicles"
         ],
@@ -96,7 +96,7 @@
     },
     "/fleet/vehicles/locations": {
       "get": {
-        "description": "This endpoint allows you to both fetch historical locations for a vehicle, as well as a feed of all new vehicle locations.\n\nIf you wish to just fetch the historical locations for a vehicle, you can pass in a `startTime` and `endTime` range. This will return all known locations for each vehicle during the given time range. If the location datapoint was read before `startTime`, this will also show up in the response. \n\nIf an `endTime` is not provided, then this will provide a continuous feed of all vehicle locations. In order to follow the feed, you can follow the pagination `hasNextPage` cursor continuously. ",
+        "description": "This endpoint allows you to both fetch historical locations for a vehicle, as well as a feed of all new vehicle locations.\n\nIf you wish to just fetch the historical locations for a vehicle, you can pass in a `startTime` and `endTime` range. This will return all location data points that were detected for each vehicle during the given time range. \n\nIf an `endTime` is not provided, then this will provide a continuous feed of all vehicle locations. In order to follow the feed, you can follow the pagination `hasNextPage` cursor continuously.  If there is not yet a `hasNextPage=true` for the feed follow, then we recommend you wait and retry in 5 seconds.",
         "tags": [
           "Vehicles"
         ],
