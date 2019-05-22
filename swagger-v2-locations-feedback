@@ -1,0 +1,639 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Description.",
+    "title": "Samsara API",
+    "version": "2.0.0"
+  },
+  "host": "api.samsara.com",
+  "basePath": "/v2",
+  "paths": {
+    "/fleet/vehicles/diagnostics": {
+      "get": {
+        "description": "This endpoint allows you to both fetch historical diagnostics information for a set of vehicles, as well as a feed of all new vehicle diagnostics information.\n\nIf you wish to just fetch the historical data for a vehicle, you can pass in a `startTime` and `endTime` range. This will return all data points for each vehicle during the given time range. If the datapoint was read before `startTime`, this will also show up in the response. \n\nIf an `endTime` is not provided, then this will provide a continuous feed of all data points. In order to follow the feed, you can follow the pagination `hasNextPage` cursor continuously. ",
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Fetch vehicle diagnostics data",
+        "operationId": "listVehicleGaugeHistory",
+        "parameters": [
+          {
+            "maximum": 10000,
+            "minimum": 50,
+            "type": "integer",
+            "format": "int64",
+            "description": "The limit for how many objects will be in the response. This will default to 250 if not explicitly provided.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "The cursor position to use to return results after.",
+            "name": "after",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A start time in ISO 8601. Defaults to now if not provided.",
+            "name": "startTime",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "An end time in ISO 8601. Defaults to infinity if not provided.",
+            "name": "endTime",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A comma delimited list of tagIds.",
+            "name": "tagIds",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A comma delimited list of vehicleIds",
+            "name": "vehicleIds",
+            "in": "query"
+          },
+          {
+            "enum": [
+              "ignition",
+              "fuel-percent",
+              "fuel-consumption",
+              "oil",
+              "battery",
+              "odometer",
+              "running-time",
+              "tire-pressure",
+              "barometer",
+              "rpm"
+            ],
+            "type": "string",
+            "description": "Comma-separated list of diagnostics information to return. Defaults to returning fuel and odometer information. All entries will include the GPS location for the time at which the value was recorded, if available. Example: gauges=fuel,odometer",
+            "name": "diagnostics",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all diagnostics data points for the specified vehicles and time range.",
+            "schema": {
+              "$ref": "#/definitions/VehicleGaugesListHistoryResponse"
+            }
+          }
+        }
+      }
+    },
+    "/fleet/vehicles/locations": {
+      "get": {
+        "description": "This endpoint allows you to both fetch historical locations for a vehicle, as well as a feed of all new vehicle locations.\n\nIf you wish to just fetch the historical locations for a vehicle, you can pass in a `startTime` and `endTime` range. This will return all known locations for each vehicle during the given time range. If the location datapoint was read before `startTime`, this will also show up in the response. \n\nIf an `endTime` is not provided, then this will provide a continuous feed of all vehicle locations. In order to follow the feed, you can follow the pagination `hasNextPage` cursor continuously. ",
+        "tags": [
+          "Vehicles"
+        ],
+        "summary": "Fetch vehicle locations",
+        "operationId": "listVehicleLocationsHistory",
+        "parameters": [
+          {
+            "maximum": 10000,
+            "minimum": 50,
+            "type": "integer",
+            "format": "int64",
+            "description": "The limit for how many objects will be in the response. This will default to 250 if not explicitly provided.",
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "The cursor position to use to return results after.",
+            "name": "after",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A start time in ISO 8601. Defaults to now if not provided.",
+            "name": "startTime",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "An end time in ISO 8601. Defaults to infinity if not provided.",
+            "name": "endTime",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A comma delimited list of tagIds.",
+            "name": "tagIds",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "A comma delimited list of vehicleIds",
+            "name": "vehicleIds",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all locations for the specified vehicles and time range.",
+            "schema": {
+              "$ref": "#/definitions/VehicleLocationsListResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AuxInputName": {
+      "description": "The name of the aux input.",
+      "type": "string",
+      "enum": [
+        "Emergency Lights",
+        "Emergency Alarm",
+        "Stop Paddle",
+        "Power Take-Off",
+        "Plow",
+        "Sweeper",
+        "Salter",
+        "Boom"
+      ],
+      "example": "Boom"
+    },
+    "AuxInputReading": {
+      "description": "Digital state of an aux input. When the value is true, the aux input is ON or ACTIVATED.",
+      "type": "object",
+      "required": [
+        "time",
+        "value"
+      ],
+      "properties": {
+        "time": {
+          "$ref": "#/definitions/time"
+        },
+        "value": {
+          "description": "Boolean representing the digital value of the aux input.",
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "AuxInputRealtimeReading": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AuxInputReading"
+        },
+        {
+          "type": "object",
+          "proerties": {
+            "name": {
+              "$ref": "#/definitions/AuxInputName"
+            }
+          }
+        }
+      ]
+    },
+    "AuxInputSeries": {
+      "description": "A list of aux input values over a timerange.",
+      "type": "object",
+      "required": [
+        "name",
+        "readings"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/AuxInputName"
+        },
+        "readings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuxInputReading"
+          }
+        }
+      }
+    },
+    "BatteryLevel": {
+      "description": "Battery voltage reported in millivolts.",
+      "type": "object",
+      "required": [
+        "time",
+        "millivolts"
+      ],
+      "properties": {
+        "millivolts": {
+          "description": "The battery voltage level, measured in millivolts.",
+          "type": "number",
+          "format": "int64",
+          "example": 13500
+        },
+        "time": {
+          "$ref": "#/definitions/time"
+        }
+      }
+    },
+    "EngineState": {
+      "description": "The state of the engine at a particular point in time. State can be Running, Off, or Idle.",
+      "type": "object",
+      "required": [
+        "time",
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "Running",
+            "Off",
+            "Idle"
+          ]
+        },
+        "time": {
+          "$ref": "#/definitions/time"
+        }
+      }
+    },
+    "FuelConsumption": {
+      "description": "Fuel consumption over time reported in milliliters. This is a running total of the fuel consumed.",
+      "type": "object",
+      "required": [
+        "time",
+        "milliliters"
+      ],
+      "properties": {
+        "milliliters": {
+          "description": "The total amount of fuel consumed in the lifetime of this vehicle, reported in milliliters of fuel.",
+          "type": "number",
+          "format": "int64",
+          "example": 78040628
+        },
+        "time": {
+          "$ref": "#/definitions/time"
+        }
+      }
+    },
+    "FuelPercent": {
+      "description": "Fuel percent over time reported in decimal percent of available fuel.",
+      "type": "object",
+      "required": [
+        "time",
+        "percent"
+      ],
+      "properties": {
+        "percent": {
+          "description": "The decimal percent of fuel available for this vehicle. A full gas tank will report 100 while an empty tank will be 0.",
+          "type": "number",
+          "format": "int64",
+          "example": 79
+        },
+        "time": {
+          "$ref": "#/definitions/time"
+        }
+      }
+    },
+    "Location": {
+      "description": "The state of the engine at a particular point in time. State can be Running, Off, or Idle.",
+      "type": "object",
+      "required": [
+        "time",
+        "location",
+        "state"
+      ],
+      "properties": {
+        "location": {
+          "$ref": "#/definitions/locationLocation"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "Running",
+            "Off",
+            "Idle"
+          ]
+        },
+        "time": {
+          "$ref": "#/definitions/time"
+        }
+      }
+    },
+    "LocationsWrapper": {
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "vehicle": {
+              "$ref": "#/definitions/vehicleTinyResponse"
+            }
+          }
+        },
+        {
+          "$ref": "#/definitions/locationLocation"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "time": {
+              "$ref": "#/definitions/time"
+            }
+          }
+        }
+      ]
+    },
+    "OdometerSeries": {
+      "description": "A listing of odometer history over time",
+      "type": "object",
+      "required": [
+        "meters",
+        "time"
+      ],
+      "properties": {
+        "meters": {
+          "description": "A combined odometer reading based on GPS and engine odometer data.",
+          "type": "number",
+          "format": "int64",
+          "example": 30949885
+        },
+        "time": {
+          "$ref": "#/definitions/time"
+        }
+      }
+    },
+    "VehicleGaugeHistory": {
+      "type": "object",
+      "properties": {
+        "auxInput1": {
+          "$ref": "#/definitions/AuxInputSeries"
+        },
+        "auxInput2": {
+          "$ref": "#/definitions/AuxInputSeries"
+        },
+        "fuelConsumption": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FuelConsumption"
+          }
+        },
+        "fuelPercent": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FuelPercent"
+          }
+        },
+        "ignition": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EngineState"
+          }
+        },
+        "odometer": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OdometerSeries"
+          }
+        }
+      }
+    },
+    "VehicleGaugeRealtime": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "auxInput1": {
+          "$ref": "#/definitions/AuxInputRealtimeReading"
+        },
+        "auxInput2": {
+          "$ref": "#/definitions/AuxInputRealtimeReading"
+        },
+        "fuelConsumption": {
+          "$ref": "#/definitions/FuelConsumption"
+        },
+        "fuelPercent": {
+          "$ref": "#/definitions/FuelPercent"
+        },
+        "ignition": {
+          "$ref": "#/definitions/EngineState"
+        },
+        "odometer": {
+          "$ref": "#/definitions/OdometerSeries"
+        }
+      }
+    },
+    "VehicleGaugesHistoryWrapper": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "object",
+          "properties": {
+            "vehicle": {
+              "$ref": "#/definitions/vehicleTinyResponse"
+            }
+          }
+        },
+        {
+          "$ref": "#/definitions/VehicleGaugeHistory"
+        }
+      ]
+    },
+    "VehicleGaugesListHistoryResponse": {
+      "description": "List of vehicle stats for the specified time period.",
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VehicleGaugesHistoryWrapper"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/paginationResponse"
+        }
+      }
+    },
+    "VehicleGaugesRealtimeFeedResponse": {
+      "description": "List of current engine gauges.",
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VehicleGaugesRealtimeWrapper"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/paginationResponse"
+        }
+      }
+    },
+    "VehicleGaugesRealtimeWrapper": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/vehicleTinyResponse"
+        },
+        {
+          "$ref": "#/definitions/VehicleGaugeRealtime"
+        }
+      ]
+    },
+    "VehicleLocation": {
+      "description": "A listing of location history over time for a vehicle",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/locationLocation"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "time": {
+              "$ref": "#/definitions/time"
+            }
+          }
+        }
+      ]
+    },
+    "VehicleLocationsListResponse": {
+      "description": "List of vehicle locations for the specified time period.",
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LocationsWrapper"
+          }
+        },
+        "pagination": {
+          "$ref": "#/definitions/paginationResponse"
+        }
+      }
+    },
+    "locationLocation": {
+      "description": "Location object",
+      "type": "object",
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "properties": {
+        "addresses": {
+          "description": "Array of address mini-objects, in which the given lat/long coordinates falls within the address's geofence borders. If the location is not within any geofence, then this value will not appear",
+          "type": "array",
+          "items": {
+            "description": "Address book entry, if one exists",
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "Address book identifier",
+                "type": "string",
+                "example": "123"
+              },
+              "name": {
+                "description": "Name of this address book entry",
+                "type": "string",
+                "example": "Main Distribution Warehouse"
+              }
+            }
+          }
+        },
+        "latitude": {
+          "description": "GPS latitude represented in degrees",
+          "type": "number",
+          "format": "double",
+          "example": 122.142
+        },
+        "longitude": {
+          "description": "GPS longitude represented in degrees",
+          "type": "number",
+          "format": "double",
+          "example": -93.343
+        }
+      },
+      "x-go-gen-location": "models"
+    },
+    "paginationResponse": {
+      "description": "Pagination parameters.",
+      "type": "object",
+      "properties": {
+        "endCursor": {
+          "description": "Cursor identifier representing the last element in the response. This value should be used in conjunction with a subsequent request's 'starting_after' query parameter.",
+          "type": "string",
+          "format": "string",
+          "example": "cmVhyI"
+        },
+        "hasNextPage": {
+          "description": "True if there are more pages of results after this response.",
+          "type": "boolean",
+          "example": true
+        },
+        "nextPageURL": {
+          "description": "URL for retrieving the next page of results. If present, this URL will contain the next page of results.",
+          "type": "string",
+          "format": "string",
+          "example": "https://api.samsara.com/fleet/vehicles/engine-gauge-history\u0026after=cmVhyI"
+        }
+      }
+    },
+    "time": {
+      "description": "UTC timestamp in RFC3339 milliseconds format.",
+      "type": "string",
+      "example": "2019-05-03T04:30:31.492Z"
+    },
+    "vehicleTinyResponse": {
+      "description": "A tiny vehicle response object.",
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "description": "Unique Samsara ID for the vehicle.",
+          "type": "string",
+          "example": "112"
+        },
+        "name": {
+          "description": "Name of the vehicle in the Samsara dashboard.",
+          "type": "string",
+          "example": "112"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "diagnosticsParam": {
+      "enum": [
+        "ignition",
+        "fuel-percent",
+        "fuel-consumption",
+        "oil",
+        "battery",
+        "odometer",
+        "running-time",
+        "tire-pressure",
+        "barometer",
+        "rpm"
+      ],
+      "type": "string",
+      "description": "Comma-separated list of diagnostics information to return. Defaults to returning fuel and odometer information. All entries will include the GPS location for the time at which the value was recorded, if available. Example: gauges=fuel,odometer",
+      "name": "diagnostics",
+      "in": "query"
+    }
+  },
+  "tags": [
+    {
+      "description": "The vehicle object describes a vehicle's attributes and settings within Samsara. A vehicle is generated in the Samsara platform when a vehicle gateway is installed. The gateway often auto-populates information such as the VIN, make, model, and year.\n\nThe vehicle object is often referenced in other objects. For these references, you will see a mini-object of the vehicle, rather than the full vehicle information. The mini-object encompasses a smaller subset of commonly-referenced field, such as the Samsara ID, name, and external ID.",
+      "name": "Vehicles"
+    }
+  ]
+}
