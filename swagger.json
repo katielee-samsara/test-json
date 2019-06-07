@@ -128,7 +128,9 @@
         "summary": "Delete a specific address.",
         "operationId": "deleteAddressById",
         "responses": {
-          "204": {}
+          "204": {
+            "description": "Empty success body"
+          }
         }
       },
       "patch": {
@@ -709,7 +711,9 @@
           }
         ],
         "responses": {
-          "204": {}
+          "204": {
+            "description": "Empty success body"
+          }
         }
       },
       "patch": {
@@ -744,7 +748,16 @@
             }
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Unique identifier for the asset.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
     },
     "/fleet/drivers": {
       "get": {
@@ -1172,7 +1185,9 @@
           }
         ],
         "responses": {
-          "204": {}
+          "204": {
+            "description": "Empty success body"
+          }
         }
       },
       "patch": {
@@ -1207,7 +1222,16 @@
             }
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Unique identifier for the trailer.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
     },
     "/fleet/trips": {
       "get": {
@@ -1591,7 +1615,16 @@
             }
           }
         }
-      }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Unique identifier for the vehicle.",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }
+      ]
     },
     "/sensors": {
       "get": {
@@ -1819,7 +1852,7 @@
         "operationId": "createTag",
         "parameters": [
           {
-            "description": "Tag create body.",
+            "name": "Tag create body.",
             "in": "body",
             "schema": {
               "$ref": "#/definitions/TagCreate"
@@ -1878,10 +1911,10 @@
         "operationId": "updateTagById",
         "parameters": [
           {
-            "description": "Tag update body.",
+            "name": "Tag update body.",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/TagCreate"
+              "$ref": "#/definitions/TagUpdate"
             }
           }
         ],
@@ -1921,7 +1954,7 @@
         "operationId": "patchTagById",
         "parameters": [
           {
-            "description": "Tag update body.",
+            "name": "Tag create body.",
             "in": "body",
             "schema": {
               "$ref": "#/definitions/TagCreate"
@@ -1947,7 +1980,8 @@
           "type": "string",
           "description": "Unique identifier for the tag.",
           "name": "id",
-          "in": "path"
+          "in": "path",
+          "required": true
         }
       ]
     },
@@ -2120,11 +2154,8 @@
         "summary": "Delete a user",
         "operationId": "deleteUserById",
         "responses": {
-          "200": {
-            "description": "Returns an empty success response.",
-            "schema": {
-              "$ref": "#/definitions/successfulDeleteResponse"
-            }
+          "204": {
+            "description": "Returns an empty success response."
           }
         }
       },
@@ -2487,7 +2518,7 @@
         },
         {
           "type": "object",
-          "proerties": {
+          "properties": {
             "name": {
               "$ref": "#/definitions/AuxInputName"
             }
@@ -3500,6 +3531,17 @@
     },
     "TagCreate": {
       "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/TagUpdate"
+        }
+      }
+    },
+    "TagUpdate": {
+      "type": "object",
       "properties": {
         "addresses": {
           "description": "The addresses that belong to this tag.",
@@ -3568,8 +3610,7 @@
             "$ref": "#/definitions/TaggedObject"
           }
         }
-      },
-      "in": "body"
+      }
     },
     "TaggedObject": {
       "description": "The object ID.",
@@ -4310,16 +4351,6 @@
           "type": "string",
           "format": "string",
           "example": "https://api.samsara.com/fleet/vehicles/engine-gauge-history\u0026after=cmVhyI"
-        }
-      }
-    },
-    "successfulDeleteResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "format": "string",
-          "example": "Object succesfully deleted."
         }
       }
     },
