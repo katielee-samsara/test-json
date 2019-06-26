@@ -1400,13 +1400,12 @@
           {
             "enum": [
               "ignition",
-              "fuel-percent",
-              "fuel-consumption",
+              "fuelPercent",
+              "cruiseStatus",
               "oil",
               "battery",
               "odometer",
-              "running-time",
-              "tire-pressure",
+              "tirePressure",
               "barometer",
               "rpm"
             ],
@@ -3031,19 +3030,17 @@
         }
       }
     },
-    "FuelConsumption": {
-      "description": "Fuel consumption over time reported in milliliters. This is a running total of the fuel consumed.",
-      "type": "object",
+    "cruiseStatus": {
+      "description": "Indicates whether cruise control has been engaged or disengaged.",
       "required": [
         "time",
-        "milliliters"
+        "status"
       ],
       "properties": {
-        "milliliters": {
-          "description": "The total amount of fuel consumed in the lifetime of this vehicle, reported in milliliters of fuel.",
-          "type": "number",
-          "format": "int64",
-          "example": 78040628
+        "status": {
+          "description": "The status of the cruise control engagement.",
+          "type": "string",
+          "enum": ["On","Off"]
         },
         "time": {
           "$ref": "#/definitions/time"
@@ -3970,10 +3967,10 @@
         "auxInput2": {
           "$ref": "#/definitions/AuxInputSeries"
         },
-        "fuelConsumption": {
+        "cruiseStatus": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/FuelConsumption"
+            "$ref": "#/definitions/cruiseStatus"
           }
         },
         "fuelPercent": {
@@ -4006,8 +4003,8 @@
         "auxInput2": {
           "$ref": "#/definitions/AuxInputRealtimeReading"
         },
-        "fuelConsumption": {
-          "$ref": "#/definitions/FuelConsumption"
+        "cruiseStatus": {
+          "$ref": "#/definitions/cruiseStatus"
         },
         "fuelPercent": {
           "$ref": "#/definitions/FuelPercent"
