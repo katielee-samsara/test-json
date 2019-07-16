@@ -17,7 +17,7 @@
   "host": "api.samsara.com",
   "basePath": "/v2",
   "paths": {
-    "/fleet/vehicles/diagnostics": {
+    "/fleet/vehicles/stats": {
       "get": {
         "description": "This endpoint allows you to both fetch historical diagnostics information for a set of vehicles, as well as a feed of all new vehicle diagnostics information.\n\nIf you wish to just fetch the historical data for a vehicle, you can pass in a `startTime` and `endTime` range. This will return all known states for a vehicle during a  given time range. In other words, this will return all data point readings for each vehicle between the given time range, and often one data point before the `startTime` range that represents the state of the vehicle in the first time segment. As an example, if you are looking to fetch all engine states between `t=4`and `t=10`, and the engine is `OFF` between time 3-6 and `IDLE` from 6-10, then the endpoint will return both the `OFF` and `IDLE` states.\n\nIf an `endTime` is not provided, then this will provide a continuous feed of all data points. In order to follow the feed, you can follow the pagination `hasNextPage` cursor continuously. If there is not yet a `hasNextPage=true` for the feed follow, then we recommend you wait and retry in 5 seconds.",
         "tags": [
@@ -67,16 +67,10 @@
           },
           {
             "enum": [
+              "auxInput",
               "ignition",
               "fuel-percent",
-              "fuel-consumption",
-              "oil",
-              "battery",
-              "odometer",
-              "running-time",
-              "tire-pressure",
-              "barometer",
-              "rpm"
+              "odometer"
             ],
             "type": "string",
             "description": "Comma-separated list of diagnostics information to return. Defaults to returning fuel and odometer information. All entries will include the GPS location for the time at which the value was recorded, if available. Example: gauges=fuel,odometer",
@@ -222,25 +216,6 @@
         }
       }
     },
-    "BatteryLevel": {
-      "description": "Battery voltage reported in millivolts.",
-      "type": "object",
-      "required": [
-        "time",
-        "millivolts"
-      ],
-      "properties": {
-        "millivolts": {
-          "description": "The battery voltage level, measured in millivolts.",
-          "type": "number",
-          "format": "int64",
-          "example": 13500
-        },
-        "time": {
-          "$ref": "#/definitions/time"
-        }
-      }
-    },
     "EngineState": {
       "description": "The state of the engine at a particular point in time. State can be Running, Off, or Idle.",
       "type": "object",
@@ -256,25 +231,6 @@
             "Off",
             "Idle"
           ]
-        },
-        "time": {
-          "$ref": "#/definitions/time"
-        }
-      }
-    },
-    "FuelConsumption": {
-      "description": "Fuel consumption over time reported in milliliters. This is a running total of the fuel consumed.",
-      "type": "object",
-      "required": [
-        "time",
-        "milliliters"
-      ],
-      "properties": {
-        "milliliters": {
-          "description": "The total amount of fuel consumed in the lifetime of this vehicle, reported in milliliters of fuel.",
-          "type": "number",
-          "format": "int64",
-          "example": 78040628
         },
         "time": {
           "$ref": "#/definitions/time"
@@ -376,12 +332,6 @@
         "auxInput2": {
           "$ref": "#/definitions/AuxInputSeries"
         },
-        "fuelConsumption": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/FuelConsumption"
-          }
-        },
         "fuelPercent": {
           "type": "array",
           "items": {
@@ -411,9 +361,6 @@
         },
         "auxInput2": {
           "$ref": "#/definitions/AuxInputRealtimeReading"
-        },
-        "fuelConsumption": {
-          "$ref": "#/definitions/FuelConsumption"
         },
         "fuelPercent": {
           "$ref": "#/definitions/FuelPercent"
@@ -613,16 +560,10 @@
   "parameters": {
     "diagnosticsParam": {
       "enum": [
+        "auxInput",
         "ignition",
         "fuel-percent",
-        "fuel-consumption",
-        "oil",
-        "battery",
-        "odometer",
-        "running-time",
-        "tire-pressure",
-        "barometer",
-        "rpm"
+        "odometer"
       ],
       "type": "string",
       "description": "Comma-separated list of diagnostics information to return. Defaults to returning fuel and odometer information. All entries will include the GPS location for the time at which the value was recorded, if available. Example: gauges=fuel,odometer",
